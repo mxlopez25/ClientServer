@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using client_server.Entities;
 using client_server.Models;
 using client_server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -12,20 +14,22 @@ namespace client_server.Services
     {
         private readonly DataContext _dataContext;
         private readonly IUserService _userService;
+        private readonly IMapper _mapper;
 
-        public AddressService(DataContext dataContext, IUserService userService)
+        public AddressService(DataContext dataContext, IUserService userService, IMapper mapper)
         {
             _dataContext = dataContext;
             _userService = userService;
+            _mapper = mapper;
         }
 
-        public async Task<List<Address>> All()
+        public async Task<List<EAddress>> All()
         {
             var addresses = await _dataContext.Addresses.ToListAsync();
-            return addresses;
+            return _mapper.Map<List<EAddress>>(addresses);
         }
 
-        public async Task<Address> Create(Address address)
+        public async Task<EAddress> Create(Address address)
         {
             var user = await _userService.Get(address.UserId);
             if(user == null)
@@ -34,7 +38,7 @@ namespace client_server.Services
             }
             _dataContext.Addresses.Add(address);
             await _dataContext.SaveChangesAsync();
-            return address;
+            return _mapper.Map<EAddress>(address);
         }
 
         public async Task<bool> Delete(int Id)
@@ -42,19 +46,19 @@ namespace client_server.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Address> Get(int Id)
+        public async Task<EAddress> Get(int Id)
         {
             var address = await _dataContext.Addresses.FindAsync(Id);
-            return address;
+            return _mapper.Map<EAddress>(address);
         }
 
-        public async Task<List<Address>> GetByUserId(int Id)
+        public async Task<List<EAddress>> GetByUserId(int Id)
         {
             var addresses = await _dataContext.Addresses.Where(a => a.UserId == Id).ToListAsync();
-            return addresses;
+            return _mapper.Map<List<EAddress>>(addresses);
         }
 
-        public async Task<Address> Update(int Id, Address address)
+        public async Task<EAddress> Update(int Id, Address address)
         {
             throw new NotImplementedException();
         }

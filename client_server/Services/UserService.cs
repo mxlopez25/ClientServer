@@ -1,5 +1,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using AutoMapper;
+using client_server.Entities;
 using client_server.Models;
 using client_server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -9,24 +11,26 @@ namespace client_server.Services
     public class UserService : IUserService
     {
         private readonly DataContext _dataContext;
+        private readonly IMapper _mapper;
 
-        public UserService(DataContext dataContext)
+        public UserService(DataContext dataContext, IMapper mapper)
         {
             _dataContext = dataContext;
+            _mapper = mapper;
         }
 
-        public async Task<List<User>> All()
+        public async Task<List<EUser>> All()
         {
             var users = await _dataContext.Users.ToListAsync();
-            return users;
+            return _mapper.Map<List<EUser>>(users);
         }
 
-        public async Task<User> Create(User user)
+        public async Task<EUser> Create(User user)
         {
             user.CreatedDate = System.DateTime.Now;
             _dataContext.Users.Add(user);
             await _dataContext.SaveChangesAsync();
-            return user;
+            return _mapper.Map<EUser>(user);
         }
 
         public async Task<bool> Delete(int Id)
@@ -34,13 +38,13 @@ namespace client_server.Services
             throw new System.NotImplementedException();
         }
 
-        public async Task<User> Get(int Id)
+        public async Task<EUser> Get(int Id)
         {
             var user = await _dataContext.Users.FindAsync(Id);
-            return user;
+            return _mapper.Map<EUser>(user);
         }
 
-        public async Task<User> Update(int Id, User user)
+        public async Task<EUser> Update(int Id, User user)
         {
             throw new System.NotImplementedException();
         }

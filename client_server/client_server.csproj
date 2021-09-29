@@ -18,8 +18,10 @@
 
   <ItemGroup>
     <None Remove="Entities\" />
+    <None Remove="Profiles\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Entities\" />
+    <Folder Include="Profiles\" />
   </ItemGroup>
 </Project>

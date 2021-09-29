@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using client_server.Models;
+using client_server.Profiles;
 using client_server.Services;
 using client_server.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -41,6 +42,9 @@ namespace client_server
             services.AddDbContext<DataContext>(item => item.UseSqlServer(Configuration.GetConnectionString("Main")));
             services.TryAddScoped<IUserService, UserService>();
             services.TryAddScoped<IAddressService, AddressService>();
+
+            services.AddAutoMapper(typeof(DataProfile));
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
