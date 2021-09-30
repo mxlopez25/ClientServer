@@ -1,6 +1,7 @@
 package com.mlopez.clientapp;
 
 public class AddressModel {
+
     int addressId;
     int userId;
     String street1;
@@ -8,6 +9,16 @@ public class AddressModel {
     String city;
     String zipCode;
     String phone;
+
+    public AddressModel(int addressId, int userId, String street1, String street2, String city, String zipCode, String phone) {
+        this.addressId = addressId;
+        this.userId = userId;
+        this.street1 = street1;
+        this.street2 = street2;
+        this.city = city;
+        this.zipCode = zipCode;
+        this.phone = phone;
+    }
 
     public int getAddressId() {
         return addressId;
