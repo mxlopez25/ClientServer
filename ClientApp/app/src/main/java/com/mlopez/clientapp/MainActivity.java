@@ -2,8 +2,11 @@ package com.mlopez.clientapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +33,7 @@ public class MainActivity extends AppCompatActivity {
     public final static String TAG = "MainActivity";
 //    TextView txtResult;
     ListView lvMain;
+    ArrayList<UserModel> userList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,6 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONArray array = new JSONArray(response);
-                            ArrayList<UserModel> userList = new ArrayList<>();
                             for(int i = 0 ; i < array.length() ; i++) {
                                 JSONObject user = array.getJSONObject(i);
                                 Log.d(TAG, user.toString());
@@ -74,5 +77,18 @@ public class MainActivity extends AppCompatActivity {
         });
         // Add the request to the RequestQueue.
         queue.add(request);
+
+
+        lvMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(MainActivity.this, "User: " + userList.get(position).getUserId(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                intent.putExtra("userId", "" + userList.get(position).getUserId());
+                intent.putExtra("firstName", userList.get(position).getFirstName());
+                intent.putExtra("lastName", userList.get(position).getLastName());
+                startActivity(intent);
+            }
+        });
     }
 }
