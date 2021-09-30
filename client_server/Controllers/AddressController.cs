@@ -45,5 +45,12 @@ namespace client_server.Controllers
             var a = await _addressService.Create(address);
             return Ok(a);
         }
+
+        [HttpGet("user/{Id}")]
+        public async Task<IActionResult> GetByUserId(int Id)
+        {
+            var addresses = await _addressService.GetByUserId(Id);
+            return Ok(addresses);
+        }
     }
 }
