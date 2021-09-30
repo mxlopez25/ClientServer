@@ -129,3 +129,6 @@ lint/tmp/
 
 # Android Profiling
 *.hprof
+
+# Lock files
+*.lock
