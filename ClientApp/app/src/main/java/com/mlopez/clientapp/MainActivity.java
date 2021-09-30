@@ -3,6 +3,7 @@ package com.mlopez.clientapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,11 +22,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    TextView txtResult;
+    public final static String TAG = "MainActivity";
+//    TextView txtResult;
     ListView lvMain;
 
     @Override
@@ -33,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        txtResult = findViewById(R.id.txt_result);
+//        txtResult = findViewById(R.id.txt_result);
         lvMain = findViewById(R.id.lv_main_list);
 
         // Instantiate the RequestQueue.
@@ -48,17 +51,25 @@ public class MainActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONArray array = new JSONArray(response);
-                            txtResult.setText("Response: " + response);
+                            ArrayList<UserModel> userList = new ArrayList<>();
+                            for(int i = 0 ; i < array.length() ; i++) {
+                                JSONObject user = array.getJSONObject(i);
+                                Log.d(TAG, user.toString());
+                                userList.add(new UserModel(user.getInt("userId"), user.getString("firstName"), user.getString("lastName")));
+                            }
+                            CustomAdapter adapter = new CustomAdapter(getApplicationContext(), userList);
+                            lvMain.setAdapter(adapter);
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            txtResult.setText("Error: " + response);
+//                            txtResult.setText("Error: " + response);
+                            Log.e(TAG, "Error: " + response);
                         }
 
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                txtResult.setText("Error: " + error);
+                Log.e(TAG, "Error: " + error.getMessage());
             }
         });
         // Add the request to the RequestQueue.
