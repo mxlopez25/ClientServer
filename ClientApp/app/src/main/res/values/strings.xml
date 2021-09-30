@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">ClientApp</string>
+    <string name="clients_list">Clients List</string>
+    <string name="no_addresses_added">No Addresses added</string>
+    <string name="plus_sign">+</string>
+    <string name="client_first_name">Client First Name</string>
+    <string name="client_last_name">Client Last Name</string>
 </resources>

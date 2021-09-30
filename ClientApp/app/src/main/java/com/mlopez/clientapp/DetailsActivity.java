@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.location.Address;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -28,7 +30,8 @@ public class DetailsActivity extends AppCompatActivity {
     public String firstName = "";
     public String lastName = "";
     ListView lvAddresses;
-    TextView tvUserName;
+    ProgressBar loading;
+    TextView tvUserName, txtNoAddress;
     ArrayList<AddressModel> addressList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +39,8 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         lvAddresses = (ListView) findViewById(R.id.lv_addresses);
         tvUserName = (TextView) findViewById(R.id.txt_user_name);
+        txtNoAddress = (TextView) findViewById(R.id.txt_no_address);
+        loading = (ProgressBar) findViewById(R.id.loading);
         Bundle extras = getIntent().getExtras();
         userId = extras.getString("userId");
         firstName = extras.getString("firstName");
@@ -46,7 +51,7 @@ public class DetailsActivity extends AppCompatActivity {
         .append(lastName));
 
         RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://clientserver.azurewebsites.net/api/Address/user/1";
+        String url = "https://clientserver.azurewebsites.net/api/Address/user/" + userId;
 
         // Request a string response from the provided URL.
         StringRequest request = new StringRequest(Request.Method.GET,
@@ -55,25 +60,34 @@ public class DetailsActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONArray array = new JSONArray(response);
-                            for(int i = 0 ; i < array.length() ; i++) {
-                                JSONObject address = array.getJSONObject(i);
-                                Log.d(TAG, address.toString());
-                                addressList.add(new AddressModel(
-                                        address.getInt("addressId"),
-                                        address.getInt("userId"),
-                                        address.getString("street1"),
-                                        address.getString("street2"),
-                                        address.getString("city"),
-                                        address.getString("zipCode"),
-                                        address.getString("phone")
-                                ));
+                            if(!response.equals("[]")) {
+                                txtNoAddress.setVisibility(View.GONE);
+                                JSONArray array = new JSONArray(response);
+                                for(int i = 0 ; i < array.length() ; i++) {
+                                    JSONObject address = array.getJSONObject(i);
+                                    Log.d(TAG, address.toString());
+                                    addressList.add(new AddressModel(
+                                            address.getInt("addressId"),
+                                            address.getInt("userId"),
+                                            address.getString("street1"),
+                                            address.getString("street2"),
+                                            address.getString("city"),
+                                            address.getString("zipCode"),
+                                            address.getString("phone")
+                                    ));
+                                }
+                                AddressAdapter adapter = new AddressAdapter(getApplicationContext(), addressList);
+                                lvAddresses.setAdapter(adapter);
+                                loading.setVisibility(View.GONE);
+                            } else {
+                                loading.setVisibility(View.GONE);
+                                txtNoAddress.setVisibility(View.VISIBLE);
                             }
-                            AddressAdapter adapter = new AddressAdapter(getApplicationContext(), addressList);
-                            lvAddresses.setAdapter(adapter);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
 //                            txtResult.setText("Error: " + response);
+                            loading.setVisibility(View.GONE);
                             Log.e(TAG, "Error: " + response);
                         }
 
@@ -81,6 +95,7 @@ public class DetailsActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                loading.setVisibility(View.GONE);
                 Log.e(TAG, "Error: " + error.getMessage());
             }
         });

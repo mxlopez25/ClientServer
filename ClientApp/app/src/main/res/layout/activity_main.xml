@@ -8,9 +8,31 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="@string/clients_list"
+            android:textSize="35sp"
+            android:textAlignment="center"/>
+
+        <Button
+            android:id="@+id/btn_add_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/plus_sign"
+            android:textSize="30sp"/>
+
         <ListView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/lv_main_list" />
+
+        <ProgressBar
+            android:id="@+id/loading_anim"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:progressDrawable="@drawable/loading"/>
 
 </LinearLayout>
