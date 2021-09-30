@@ -3,6 +3,13 @@ package com.mlopez.clientapp;
 import java.util.List;
 
 public class UserModel {
+
+    public UserModel(int userId, String firstName, String lastName) {
+        this.userId = userId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     public int getUserId() {
         return userId;
     }
