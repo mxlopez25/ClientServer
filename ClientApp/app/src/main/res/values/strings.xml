@@ -5,4 +5,11 @@
     <string name="plus_sign">+</string>
     <string name="client_first_name">Client First Name</string>
     <string name="client_last_name">Client Last Name</string>
+    <string name="address_street_2">Address Street 2</string>
+    <string name="address_street_1">Address Street 1</string>
+    <string name="address_city">Address City</string>
+    <string name="address_zip_code">Address Zip Code</string>
+    <string name="address_phone">Address Phone</string>
+    <string name="add_address">Add Address</string>
+    <string name="add_user">Add User</string>
 </resources>
