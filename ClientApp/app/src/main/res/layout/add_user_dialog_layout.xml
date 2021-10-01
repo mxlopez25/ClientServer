@@ -16,4 +16,9 @@
         android:id="@+id/edt_last_name"
         android:hint="@string/client_last_name"/>
 
+    <Button
+        android:id="@+id/btn_add_user_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_user" />
 </LinearLayout>
