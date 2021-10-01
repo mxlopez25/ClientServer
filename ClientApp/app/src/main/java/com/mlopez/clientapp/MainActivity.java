@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,10 +42,11 @@ public class MainActivity extends AppCompatActivity {
     ListView lvMain;
     ArrayList<UserModel> userList = new ArrayList<>();
     ProgressBar pbLoading;
-    Button btnAddUser;
+    Button btnAddUser, btnAddUserDialog;
     AlertDialog.Builder addUserDialog;
     EditText edtFirstName, edtLastName;
     View dView;
+    AlertDialog addDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,22 +63,33 @@ public class MainActivity extends AppCompatActivity {
         dView = inflater.inflate(R.layout.add_user_dialog_layout, null);
         edtFirstName = (EditText) dView.findViewById(R.id.edt_first_name);
         edtLastName = (EditText) dView.findViewById(R.id.edt_last_name);
+        btnAddUserDialog = (Button) dView.findViewById(R.id.btn_add_user_dialog);
 
         requestData();
 
         addUserDialog = new AlertDialog.Builder(this);
         addUserDialog.setView(dView);
-        addUserDialog.setPositiveButton("Add User", new DialogInterface.OnClickListener() {
+
+
+//        addUserDialog.setPositiveButton("Add User", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                addUser();
+//            }
+//        });
+
+        addUserDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                addUser();
+                dialog.cancel();
+                ((ViewGroup)dView.getParent()).removeView(dView);
             }
         });
 
         btnAddUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog addDialog = addUserDialog.create();
+                addDialog = addUserDialog.create();
                 addDialog.show();
             }
         });
@@ -92,6 +105,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        btnAddUserDialog.setOnClickListener(v -> {
+            if(validateField(edtFirstName, "Please insert Firstname") && validateField(edtLastName, "Please insert Lastname")) {
+                addUser();
+            }
+            return;
+        });
+    }
+
+    public boolean validateField(EditText field, String message) {
+        if(!field.getText().toString().isEmpty()) {
+            field.setError(null);
+            return true;
+        }
+        field.setError(message);
+        return false;
     }
 
     public void addUser() {
@@ -111,12 +140,16 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
+                        addDialog.cancel();
+                        ((ViewGroup)dView.getParent()).removeView(dView);
                         requestData();
                     }
                 },
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
+                        addDialog.cancel();
+                        ((ViewGroup)dView.getParent()).removeView(dView);
                         Log.d(TAG, error.getMessage());
                     }
                 }) {};
