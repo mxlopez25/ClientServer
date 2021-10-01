@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        txtResult = findViewById(R.id.txt_result);
         lvMain = findViewById(R.id.lv_main_list);
         btnAddUser = findViewById(R.id.btn_add_user);
         pbLoading = findViewById(R.id.loading_anim);
@@ -69,14 +68,6 @@ public class MainActivity extends AppCompatActivity {
 
         addUserDialog = new AlertDialog.Builder(this);
         addUserDialog.setView(dView);
-
-
-//        addUserDialog.setPositiveButton("Add User", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                addUser();
-//            }
-//        });
 
         addUserDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
